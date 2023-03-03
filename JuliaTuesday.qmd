@@ -1,0 +1,46 @@
+---
+title: "JuliaTuesday"
+author: "Nicola Rennie"
+format:
+    html:
+        theme: lux
+        code-fold: true
+---
+
+## 2023/02/28: African Language Sentiment
+
+Over 100,000 tweets in 14 different African languages were analysed to uncover the sentiment of the text. Sentiment analysis was performed and each tweet was labelled as either <span style='color:#407e6e;'>positive</span>, <span style='color:#374A67;'>negative</span>, or <span style='color:#a4a4a4;'>neutral</span>. Nigerian pidgin is particularly notable for its very few neutral tweets.
+
+Data: [AfriSenti](https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-02-28/readme.md)
+
+```{julia}
+#| label: afrisenti
+#| fig-align: center
+using Tidier
+using UrlDownload
+using VegaLite
+
+afrisenti = urldownload("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-28/afrisenti.csv") |> DataFrame ;
+
+plot_data = @chain afrisenti begin
+    @select(language_iso_code, label)
+    @group_by(language_iso_code, label)
+    @summarize(n = nrow())
+    @ungroup
+end ;
+
+plot_data |>
+@vlplot(
+    :bar,
+    x={:n, axis={title="Number of tweets"}},
+    y={:language_iso_code, axis={title=""}},
+    color={
+        :label,
+        scale={
+            domain=["positive","neutral","negative"],
+            range=["#407e6e","#a4a4a4","#374A67"]
+        }
+    }
+)
+```
+

@@ -1,0 +1,4 @@
+- source: JuliaTuesday.qmd
+  quarto-pub:
+    - id: b6831e89-160b-4f4e-bf42-256f2553564c
+      url: 'https://quartopub.com/sites/nrennie/juliatuesday'

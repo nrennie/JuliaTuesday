@@ -1,0 +1,14 @@
+## 2023/03/07: Numbats
+
+Data: [Atlas of Living Australia](https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-03-07/readme.md)
+
+```{julia}
+#| label: numbats
+#| fig-align: center
+using Tidier
+using UrlDownload
+
+numbats = urldownload("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-03-07/numbats.csv") |> DataFrame ;
+
+```
+

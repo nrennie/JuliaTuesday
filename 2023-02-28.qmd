@@ -1,4 +1,4 @@
-## 2023/02/28: African Language Sentiment
+# 2023/02/28: African Language Sentiment
 
 Over 100,000 tweets in 14 different African languages were analysed to uncover the sentiment of the text. Sentiment analysis was performed and each tweet was labelled as either <span style='color:#407e6e;'>positive</span>, <span style='color:#374A67;'>negative</span>, or <span style='color:#a4a4a4;'>neutral</span>. Nigerian pidgin is particularly notable for its very few neutral tweets.
 

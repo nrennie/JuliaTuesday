@@ -1,4 +1,4 @@
-## 2023/03/07: Numbats
+# 2023/03/07: Numbats
 
 Numbats are small, distinctively-striped, insectivorous marsupials found in Australia. The species was once widespread across southern Australia, but is now restricted to several small colonies in Western Australia. They are therefore considered an endangered species. The calendar below shows thenumber of sightings of numbats per day between  2016 and 2022, using data from the Atlas of Living Australia. The full dataset includes data from 1856 to 2023 and, of the 805 observations, only 552 had dates recorded. Therefore the calendar may not reflect all numbat sightings.
 

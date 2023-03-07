@@ -5,7 +5,14 @@ format:
     html:
         theme: lux
         code-fold: true
+        toc: true
+        toc-location: right
+        toc-depth: 2
 ---
+
+[#TidyTuesday](https://github.com/rfordatascience/tidytuesday) is a weekly data project aimed at the R ecosystem, aimed at developing skills in the tidyverse ecosystem. The [Tidoer.jl](https://github.com/kdpsingh/Tidier.jl) implementation aims to bring the tidyverse ecosystem to Julia!
+
+I'll be processing and visualising some of the #TidyTuesday data sets in Julia here!
 
 {{< include 2023-03-07.qmd >}}
 

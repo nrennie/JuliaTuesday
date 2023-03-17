@@ -29,6 +29,6 @@ set_aog_theme!()
 update_theme!(fontsize=12, markersize=20)
 
 numbats_plot = data(plot_data) * mapping(:Month => renamer("Jan" => "Jan", "Feb" => "Feb", "Mar" => "Mar", "Apr" => "Apr", "May" => "May", "Jun" => "Jun", "Jul" => "Jul", "Aug" => "Aug", "Sep" => "Sep", "Oct" => "Oct", "Nov" => "Nov", "Dec" => "Dec"), :Year, color = :n => "Number of sightings") * visual(colormap=:thermal)
-draw(numbats_plot, colorbar=(position=:top, size=25))
+AlgebraOfGraphics.draw(numbats_plot, colorbar=(position=:top, size=25))
 ```
 

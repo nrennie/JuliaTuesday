@@ -1,0 +1,54 @@
+# 2023/03/21: Programming Languages
+
+Of the 4,303 programming languages listed in the Programming Language DataBase, 205 use //, 101 use #, and 64 use ; to define which lines are comments. 3,831 languages do not have a comment token listed. The plots below show when a language <span style="color: #791E94;">first appeared</span>, and when its <span style="color: #DE6449;">last activity</span> was.
+           
+Data: [Programming Language DataBase](https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-03-21/readme.md)
+
+```{julia}
+#| label: languages
+#| fig-align: center
+#| message: false
+using Tidier
+using UrlDownload
+using DataFrames
+using AlgebraOfGraphics, CairoMakie
+using Colors
+
+languages = urldownload("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-03-21/languages.csv") |> DataFrame ;
+
+plot_data = @chain languages begin
+    @select(title, appeared, line_comment_token, last_activity, language_rank)
+    @filter(line_comment_token in ["//", "#", ";"])
+    @arrange(language_rank)
+    @group_by(line_comment_token)
+    @slice(1:10)
+    @ungroup
+    @pivot_longer(df_wide, appeared:last_activity)
+    @filter(variable in ["appeared", "last_activity"])
+end
+
+set_aog_theme!()
+
+xy1 = data(plot_data) * mapping(:value,
+                               :title,
+                               layout=:line_comment_token,
+                               color=:variable => renamer("appeared" => "first appearance", "last_activity" => "last activity") => "Time of:")
+layers1 = visual(Scatter)
+
+xy2 = data(plot_data) * mapping(:value,
+                                :title,
+                                layout=:line_comment_token,
+                                group=:title) * visual(Lines)
+
+
+colors = [colorant"#791E94", colorant"#DE6449"]
+draw(xy2 + layers1 * xy1,
+     legend=(position=:bottom, titleposition=:left, framevisible=false, padding=5),
+     axis=(ylabel="", xlabel="",  xticks=1980:20:2020),
+     facet=(; linkxaxes=:minimal, linkyaxes=:minimal),
+     palettes=(layout=[(1, 1), (1, 2), (1, 3)],
+               color=colors))
+```
+
+
+

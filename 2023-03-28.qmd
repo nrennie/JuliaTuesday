@@ -1,0 +1,46 @@
+# 2023/03/28: Time Zones
+
+Time zones tend to follow the boundaries between countries and their subdivisions
+instead of strictly following longitude. For every one-hour time, a point on the earth moves
+through 15 degrees of longitude. Each point relates to one of 337 time zones listed in the 
+IANA time zone database. The colours show which time zones are in Africa, America, Antarctica, Asia, Atlantic, Australia, Europe, Indian, and Pacific zones.
+           
+Data: [IANA tz database](https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-03-28/readme.md)
+
+```{julia}
+#| label: timezones
+#| fig-align: center
+#| message: false
+#| warning: false
+using UrlDownload
+using DataFrames
+using GeoMakie, CairoMakie
+using Colors
+using GLMakie
+
+timezones = urldownload("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-03-28/timezones.csv") |> DataFrame ;
+
+lons = -180:180
+lats = -90:90
+fig = Figure()
+ax = GeoAxis(fig[1,1],
+             title = "Time Zones of the World")
+
+using GeoMakie.GeoJSON
+countries_file = download("https://datahub.io/core/geo-countries/r/countries.geojson")
+countries = GeoJSON.read(read(countries_file, String))
+
+poly!(ax, countries;
+    strokecolor = "#2F4F4F", strokewidth = 0.5,
+    color="#b2cfcf"
+)
+
+slons = timezones[:, "longitude"]
+slats = timezones[:, "latitude"]
+scatter!(slons, slats, color= "#E30B5C", markersize=10)
+
+fig
+```
+
+
+

@@ -1,0 +1,50 @@
+# 2023/04/04: Premier League 2021-2022
+
+Data: [Kaggle](https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-04-04/readme.md)
+
+```{julia}
+#| label: soccer
+#| fig-align: center
+#| message: false
+using Tidier
+using UrlDownload
+using DataFrames
+using AlgebraOfGraphics, CairoMakie
+using LaTeXStrings
+using Makie
+
+soccer = urldownload("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-04-04/soccer21-22.csv") |> DataFrame ;
+
+home_goals = @chain soccer begin
+  @group_by(HomeTeam)
+  @summarize(home_goals = sum(FTHG))
+end
+
+away_goals = @chain soccer begin
+  @group_by(AwayTeam)
+  @summarize(away_goals = sum(FTAG))
+end
+
+plot_data = @chain home_goals begin
+  @left_join(away_goals, "HomeTeam" = "AwayTeam")
+  @pivot_longer(plot_data, home_goals:away_goals)
+  @mutate(text_vals = value+3)
+end
+
+set_aog_theme!()
+
+xy1 = data(plot_data) * mapping(:HomeTeam,
+                                :value,
+                                layout=:variable => renamer("home_goals" => "Total Home Goals", "away_goals" => "Total Away Goals")) * visual(BarPlot, color=:black, width=0.1)
+
+xy2 = data(plot_data) * mapping(:HomeTeam,
+                                :value,
+                                layout=:variable => renamer("home_goals" => "Total Home Goals", "away_goals" => "Total Away Goals")) * visual(Scatter)
+
+draw(xy1 + xy2,
+     axis=(ylabel="", xlabel="", xticklabelrotation=45.0),
+     facet=(; linkxaxes=:minimal, linkyaxes=:minimal))
+```
+
+
+

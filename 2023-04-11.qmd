@@ -1,0 +1,32 @@
+# 2023/04/11: US Egg Production
+
+The line chart shows the production (in millions) of cage-free organic eggs in the USA. The data used in this infographic is based on reports produced by the United States Department of Agriculture, which are published weekly or monthly.
+
+Data: [The Humane League Labs US Egg Production Dataset](https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-04-11/readme.md)
+
+```{julia}
+#| label: eggs
+#| fig-align: center
+#| message: false
+using Tidier
+using UrlDownload
+using DataFrames
+using AlgebraOfGraphics, CairoMakie
+
+production = urldownload("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-04-11/egg-production.csv") |> DataFrame ;
+
+plot_data = @chain production begin
+  @filter(prod_process == "cage-free (organic)")
+  @mutate(n = n_eggs/1000000)
+end
+
+set_aog_theme!()
+
+xy = data(plot_data) * mapping(:observed_month, :n) * visual(Lines)
+
+draw(xy,
+     axis=(ylabel="Cage-free organic eggs produced (millions)", xlabel=""))
+```
+
+
+

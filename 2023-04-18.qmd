@@ -1,0 +1,33 @@
+# 2023/04/18: Neolithic Founder Crops
+
+Eight *founder crops* — emmer wheat, einkorn wheat, barley, lentil, pea, chickpea, bitter vetch, and flax — have long been thought to have been the bedrock of Neolithic economies. The world map below shows site locations considered in the Origins of Agriculture database, with sites highlighted based on their highest proportion of crops from different categories shown in the magnified versions on the right.
+
+Data: [The Neolithic Founder Crops in Southwest Asia: Research Compendium](https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-04-18/readme.md)
+
+```{julia}
+#| label: crops
+#| fig-align: center
+#| message: false
+#| warning: false
+using Tidier
+using UrlDownload
+using DataFrames
+using AlgebraOfGraphics, CairoMakie
+
+founder_crops = urldownload("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-04-18/founder_crops.csv") |> DataFrame ;
+
+plot_data = @chain founder_crops begin
+  @filter(source == "ORIGINS")
+  @filter(category != "NA")
+  @select(category, site_name, prop)
+  @group_by(site_name, category)
+  @summarize(prop = mean(prop))
+  @ungroup()
+end
+
+xy = data(plot_data) * mapping(:category, :prop) * visual(BoxPlot; color="#508080")
+
+with_theme(theme_ggplot2()) do
+	draw(xy; axis=(; title="Neolithic Founder Crops", ylabel="Proportion", xlabel=""))
+end
+```

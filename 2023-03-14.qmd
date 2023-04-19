@@ -8,6 +8,7 @@ Data: [European Medicines Agency](https://github.com/rfordatascience/tidytuesday
 #| label: drugs
 #| fig-align: center
 #| message: false
+#| warning: false
 using Tidier
 using UrlDownload
 using DataFrames

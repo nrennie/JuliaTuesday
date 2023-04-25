@@ -1,0 +1,33 @@
+# 2023/04/25: London Marathon
+
+Since the first London Marathon in 1981, the number of people applying for a place in the race has drastically increased - especially in recent years. Over 450, 000 people applied for the 2020 race, which ended up taking place with only elite athletes due to Covid-19.
+
+Data: [Wikipedia via {LondonMarathon} R package](https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-04-25/readme.md)
+
+```{julia}
+#| label: marathon
+#| fig-align: center
+#| message: false
+#| warning: false
+using Tidier
+using UrlDownload
+using DataFrames
+using AlgebraOfGraphics, CairoMakie
+
+london_marathon = urldownload("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-04-25/london_marathon.csv") |> DataFrame ;
+
+plot_data = @chain london_marathon begin
+  @select(Year, Applicants)
+  @filter(Applicants != "NA")
+end
+
+plot_data[!,:Applicants] = [parse(Int,x) for x in plot_data[!,:Applicants]] 
+
+xy1 = data(plot_data) * mapping(:Year, :Applicants) * visual(BarPlot, color=:black, width=0.1)
+
+xy2 = data(plot_data) * mapping(:Year, :Applicants) * visual(Scatter, color="#e00601")
+
+with_theme(theme_ggplot2()) do
+	draw(xy1 + xy2; axis=(; title="London Marathon", ylabel="Number of applicants", xlabel=""))
+end
+```

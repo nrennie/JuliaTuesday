@@ -1,0 +1,41 @@
+# 2023/05/02: The Portal Project
+
+The Portal Project is a long-term ecological research site studying the dynamics of desert rodents, plants, ants and weather in Arizona. This chart shows the number of Merriam's kangaroo rats in 8 different plots. Plots 3, 15, 19, and 21 are <span style='color:#B23A48;'>exclosure plots</span> whilst the rest are <span style='color:#1F7A8C;'>control plots</span>. Merriam's kangaroo rat has been surveyed the most often, especially in control plots.
+
+Data: [The Portal Project](https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-05-02/readme.md)
+
+```{julia}
+#| label: surveys
+#| fig-align: center
+#| message: false
+#| warning: false
+using Tidier
+using UrlDownload
+using DataFrames
+using AlgebraOfGraphics, CairoMakie
+using Colors
+
+surveys = urldownload("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-05-02/surveys.csv") |> DataFrame ;
+plots = urldownload("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-05-02/plots.csv") |> DataFrame ;
+
+plot_data = @chain surveys begin
+  @select(year, plot, species)
+  @filter(species == "DM")
+  @filter(plot in [3, 4, 11, 14, 15, 17, 19, 21])
+  @group_by(year, plot)
+  @summarise(n = nrow())
+  @ungroup
+  @left_join(plots)
+end
+
+plot_data[!,:plot] = [string(x) for x in plot_data[!,:plot]] 
+
+xy = data(plot_data) * mapping(:year, :n, color=:treatment => "Treatment:", layout=:plot) * visual(Lines)
+
+colors = ["exclosure" => colorant"#B23A48", "control" => colorant"#1F7A8C"]
+
+with_theme(theme_ggplot2()) do
+	draw(xy; legend=(position=:bottom, titleposition=:left, framevisible=false, padding=5),
+	     axis=(; ylabel="Number of Merriam's Kangaroo Rat observed", xlabel=""), facet=(; linkxaxes=:minimal), palettes = (color=colors, layout=[(2, 1), (2, 2), (3, 1), (3, 2), (4, 1), (4, 2), (1, 1), (1, 2)],))
+end
+```
